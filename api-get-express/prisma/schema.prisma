@@ -7,29 +7,29 @@ datasource db {
   url      = "postgresql://postgres:postgres@postgresql:5432/postgres?schema=public"
 }
 
-model Writer {
+model writer {
   id           Int            @id @default(autoincrement())
   title        String?
   name         String
   pseudo       String
-  Letter       Letter[]
+  Letter       letter[]
   WriterCircle WriterCircle[]
 }
 
-model Circle {
+model circle {
   id           Int            @id @default(autoincrement())
   name         String
-  Letter       Letter[]
+  Letter       letter[]
   WriterCircle WriterCircle[]
 }
 
-model Letter {
+model letter {
   id Int @id @default(autoincrement())
 
-  circle   Circle @relation(fields: [circleId], references: [id])
+  circle   circle @relation(fields: [circleId], references: [id])
   circleId Int
 
-  writer   Writer @relation(fields: [writerId], references: [id])
+  writer   writer @relation(fields: [writerId], references: [id])
   writerId Int
 
   postAt    DateTime
@@ -37,17 +37,17 @@ model Letter {
   content   String
   subject   String
 
-  reply   Letter? @relation("replyTo", fields: [replyId], references: [id])
+  reply   letter? @relation("replyTo", fields: [replyId], references: [id])
   replyId Int?
 
-  repliesTo Letter[] @relation("replyTo")
+  repliesTo letter[] @relation("replyTo")
 }
 
 model WriterCircle {
-  circle   Circle @relation(fields: [circleId], references: [id])
+  circle   circle @relation(fields: [circleId], references: [id])
   circleId Int
 
-  writer   Writer @relation(fields: [writerId], references: [id])
+  writer   writer @relation(fields: [writerId], references: [id])
   writerId Int
 
   @@id([circleId, writerId])

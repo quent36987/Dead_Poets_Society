@@ -2,7 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const writers: Prisma.WriterCreateInput[] = [
+const writers: Prisma.writerCreateInput[] = [
     {
         name: 'John Doe',
         title: 'Mr',
@@ -46,7 +46,7 @@ const writers: Prisma.WriterCreateInput[] = [
     }
 ];
 
-const circles: Prisma.CircleCreateInput[] = [
+const circles: Prisma.circleCreateInput[] = [
     {
         name: "Le Cercle des Fondateurs",
     },

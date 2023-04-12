@@ -45,7 +45,7 @@ def hello():
 @app.route('/circles', methods=['GET'])
 def get_letters():
      cursor = conn.cursor()
-     cursor.execute('SELECT * FROM tata;')
+     cursor.execute('SELECT * FROM circle;')
      letters = cursor.fetchall()
      cursor.close()
      return jsonify(letters)
