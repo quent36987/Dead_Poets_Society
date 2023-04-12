@@ -4,14 +4,17 @@ from datetime import datetime
 from keycloak import KeycloakOpenID
 
 # Configurer les informations de connexion à Keycloak
-keycloak_url = 'http://localhost:8080/auth/'
-realm_name = 'test'
-client_id = 'python-local'
+
+
 username = 'quentin'
 password = 'quentin123'
 
 # Créer une instance de KeycloakOpenID
-keycloak_openid = KeycloakOpenID(server_url=keycloak_url, realm_name=realm_name, client_id=client_id)
+keycloak_openid = KeycloakOpenID(
+    server_url="http://keycloak:8080/auth/",
+    client_id="python-local",
+    realm_name="test",
+)
 
 # Authentification de l'utilisateur
 token = keycloak_openid.token(username=username, password=password)
@@ -31,7 +34,7 @@ conn = psycopg2.connect(
     dbname="postgres",
     user="postgres",
     password="postgres",
-    host="localhost",
+    host="postgresql",
     port=5432
 )
 cur = conn.cursor()

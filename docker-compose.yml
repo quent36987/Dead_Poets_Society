@@ -15,17 +15,20 @@ services:
     networks:
         - bdd
 
-#  pypy:
-#    build: ./app/
-#    image: pypy
-#    container_name: web-pytho
-#    depends_on:
-#      - postgresql
-#    networks:
-#      - bdd
-#      - keycloak
-#    ports:
-#      - 5001:5001
+  pypy:
+    build: ./app/
+    image: pypy
+    container_name: web-pytho
+    depends_on:
+      - postgresql
+      - keycloak
+      - web-node
+    networks:
+      - bdd
+      - keycloak
+    ports:
+      - 5001:5001
+
 
 
   #  app:
