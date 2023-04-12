@@ -1,0 +1,105 @@
+version: '3'
+
+services:
+
+  web-node:
+    build: ./api-get-express/
+    image: web-node
+    container_name: web-node
+    environment:
+      - "DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/postgres?schema=public"
+    depends_on:
+      - postgresql
+    ports:
+      - 3000:3000
+    networks:
+        - bdd
+
+#  pypy:
+#    build: ./app/
+#    image: pypy
+#    container_name: web-pytho
+#    depends_on:
+#      - postgresql
+#    networks:
+#      - bdd
+#      - keycloak
+#    ports:
+#      - 5001:5001
+
+
+  #  app:
+  #    build: ./app/
+  #    networks:
+  #      - my-network
+  #
+  #  nginx:
+  #    image: nginx:latest
+  #    ports:
+  #      - "80:80"
+  #      - "443:443"
+  #    volumes:
+  #      - ./cert:/etc/nginx/cert
+  #      - ./nginx.conf:/etc/nginx/nginx.conf
+  #    restart: always
+  #    networks:
+  #      - my-network
+
+  keycloak:
+    image: jboss/keycloak:latest
+    restart: on-failure
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=password
+      - DB_VENDOR=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_ADDR=keycloak-db
+      - DB_PORT=5432
+      - DB_DATABASE=keycloakdb
+      - PROXY_ADDRESS_FORWARDING=true
+    depends_on:
+      - keycloak-db
+    ports:
+        - 8080:8080
+    networks:
+      - keycloak
+
+  keycloak-db:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloakdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - keycloak
+
+
+  postgresql:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+    networks:
+        - bdd
+
+volumes:
+  pgdata:
+
+  db:
+    driver: local
+
+networks:
+    bdd:
+
+    keycloak:
+
+

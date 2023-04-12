@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:postgres@postgresql:5432/postgres?schema=public"
+}
+
+model Writer {
+  id           Int            @id @default(autoincrement())
+  title        String?
+  name         String
+  pseudo       String
+  Letter       Letter[]
+  WriterCircle WriterCircle[]
+}
+
+model Circle {
+  id           Int            @id @default(autoincrement())
+  name         String
+  Letter       Letter[]
+  WriterCircle WriterCircle[]
+}
+
+model Letter {
+  id Int @id @default(autoincrement())
+
+  circle   Circle @relation(fields: [circleId], references: [id])
+  circleId Int
+
+  writer   Writer @relation(fields: [writerId], references: [id])
+  writerId Int
+
+  postAt    DateTime
+  updatedAt DateTime @updatedAt
+  content   String
+  subject   String
+
+  reply   Letter? @relation("replyTo", fields: [replyId], references: [id])
+  replyId Int?
+
+  repliesTo Letter[] @relation("replyTo")
+}
+
+model WriterCircle {
+  circle   Circle @relation(fields: [circleId], references: [id])
+  circleId Int
+
+  writer   Writer @relation(fields: [writerId], references: [id])
+  writerId Int
+
+  @@id([circleId, writerId])
+}

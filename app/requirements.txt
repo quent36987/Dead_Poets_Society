@@ -1,0 +1,4 @@
+Flask==2.1.0
+python-keycloak==0.29.0
+datetime
+psycopg2-binary

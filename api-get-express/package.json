@@ -1,0 +1,42 @@
+{
+    "name": "soa_rest",
+    "version": "1.0.0",
+    "description": "> Adrien LORGE > Annabelle CHEVREAU > Florian REIMAT > Quentin GOUJON",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "./node_modules/.bin/ts-node ./src/index.ts",
+        "prettier": "npx prettier -w ..",
+        "seed": "ts-node ./prisma/seed.ts",
+        "eslint": "./node_modules/.bin/eslint --ext js,ts --fix .",
+        "lint": "npm run prettier && npm run eslint"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.cri.epita.fr:florian.reimat/soa_rest.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.17",
+        "@types/node": "^18.15.5",
+        "@typescript-eslint/eslint-plugin": "^5.56.0",
+        "@typescript-eslint/parser": "^5.56.0",
+        "eslint": "^8.36.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-config-standard-with-typescript": "^34.0.1",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-n": "^15.6.1",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-promise": "^6.1.1",
+        "prettier": "2.8.7",
+        "prisma": "^4.11.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.2"
+    },
+    "dependencies": {
+        "@prisma/client": "^4.11.0",
+        "express": "^4.18.2"
+    }
+}
