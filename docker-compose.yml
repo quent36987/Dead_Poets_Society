@@ -1,13 +1,12 @@
 version: '3'
 
 services:
-
-  web-node:
+  # Public API to get any data from the database
+  api-get-express:
     build: ./api-get-express/
-    image: web-node
-    container_name: web-node
-    environment:
-      - "DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/postgres?schema=public"
+    image: api-get-express
+    container_name: api-get-express
+    restart: unless-stopped
     depends_on:
       - postgresql
     ports:
@@ -15,39 +14,38 @@ services:
     networks:
         - bdd
 
-  pypy:
-    build: ./app/
-    image: pypy
-    container_name: web-pytho
+  # Private API who work with the keycloak server to authenticate the user and modify the database
+  api-python:
+    build: api-python/
+    image: api-python
+    container_name: api-python
+    restart: unless-stopped
     depends_on:
-      - postgresql
-      - keycloak
-      - web-node
+        - postgresql
+        - keycloak
+        - api-get-express
     networks:
       - bdd
       - keycloak
     ports:
       - 5001:5001
 
+  # Database to store all the data
+  postgresql:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+    networks:
+      - bdd
 
-
-  #  app:
-  #    build: ./app/
-  #    networks:
-  #      - my-network
-  #
-  #  nginx:
-  #    image: nginx:latest
-  #    ports:
-  #      - "80:80"
-  #      - "443:443"
-  #    volumes:
-  #      - ./cert:/etc/nginx/cert
-  #      - ./nginx.conf:/etc/nginx/nginx.conf
-  #    restart: always
-  #    networks:
-  #      - my-network
-
+  # Keycloak server to authenticate the user
   keycloak:
     image: jboss/keycloak:latest
     restart: on-failure
@@ -80,29 +78,19 @@ services:
       - keycloak
 
 
-  postgresql:
-    image: postgres:14.1-alpine
-    restart: unless-stopped
-    volumes:
-      - db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-    ports:
-      - 5432:5432
-    networks:
-        - bdd
-
 volumes:
+  # Volume to store keycloak config
   pgdata:
 
+  # Volume to store the database
   db:
     driver: local
 
 networks:
+    # Network to connect the api and the database
     bdd:
 
+    # Network to connect the api to keycloak
     keycloak:
 
 
