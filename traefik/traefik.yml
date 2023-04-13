@@ -37,7 +37,6 @@ entryPoints:
   web-secure:
     address: :443
 
-
 # Configure your CertificateResolver here...
 # ---
 #certificatesResolvers:

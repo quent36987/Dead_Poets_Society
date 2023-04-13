@@ -59,6 +59,7 @@ services:
     networks:
       - bdd
 
+  # The reverse proxy to redirect the request to the good server
   traefik:
     image: traefik
     container_name: "traefik"
@@ -70,11 +71,11 @@ services:
       - 8081:8080
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.traefik=true"
-     # - traefik.http.routers.traefik.rule=Host(`mmonitor.localhost`)
-     # - traefik.http.routers.traefik.entrypoints=web-secure
-      #- traefik.http.routers.traefik.tls=true
-
+      - traefik.http.routers.traefik.rule=Host(`monitor.docker.localhost`)
+      - traefik.http.routers.traefik.entrypoints=web-secure
+      - traefik.http.routers.traefik.tls=true
+      - traefik.docker.network=traefik-network
+      - traefik.http.routers.traefik.service=api@internal
 
     volumes:
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
