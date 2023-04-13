@@ -9,10 +9,17 @@ services:
     restart: unless-stopped
     depends_on:
       - postgresql
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-get-express.rule=Host(`get.docker.localhost`)
+      - traefik.http.routers.api-get-express.entrypoints=web-secure
+      - traefik.http.routers.api-get-express.tls=true
+      - traefik.docker.network=traefik-network
     ports:
       - 3000:3000
     networks:
         - bdd
+        - traefik-network
 
   # Private API who work with the keycloak server to authenticate the user and modify the database
   api-python:
@@ -24,9 +31,16 @@ services:
         - postgresql
         - keycloak
         - api-get-express
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-python.rule=Host(`python.docker.localhost`)
+      - traefik.http.routers.api-python.entrypoints=web-secure
+      - traefik.http.routers.api-python.tls=true
+      - traefik.docker.network=traefik-network
     networks:
       - bdd
       - keycloak
+      - traefik-network
     ports:
       - 5001:5001
 
@@ -44,6 +58,32 @@ services:
       - 5432:5432
     networks:
       - bdd
+
+  traefik:
+    image: traefik
+    container_name: "traefik"
+    networks:
+      - traefik-network
+    ports:
+      - "80:80"
+      - "443:443"
+      - 8081:8080
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.traefik=true"
+     # - traefik.http.routers.traefik.rule=Host(`mmonitor.localhost`)
+     # - traefik.http.routers.traefik.entrypoints=web-secure
+      #- traefik.http.routers.traefik.tls=true
+
+
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/certs:/etc/certs:ro
+      - ./traefik/config.yml:/etc/traefik/config.yml:ro
+
+    restart: unless-stopped
+
 
   # Keycloak server to authenticate the user
   keycloak:
@@ -78,6 +118,9 @@ services:
       - keycloak
 
 
+
+
+
 volumes:
   # Volume to store keycloak config
   pgdata:
@@ -92,5 +135,10 @@ networks:
 
     # Network to connect the api to keycloak
     keycloak:
+
+    # Network to connect the api to traefik (reverse proxy)
+    traefik-network:
+      name: traefik-network
+
 
 
