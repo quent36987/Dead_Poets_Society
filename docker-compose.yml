@@ -9,21 +9,14 @@ services:
     restart: unless-stopped
     depends_on:
       - postgresql
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.api-get-express.rule=Host(`get.docker.localhost`)
-      - traefik.http.routers.api-get-express.entrypoints=web-secure
-      - traefik.http.routers.api-get-express.tls=true
-      - traefik.docker.network=traefik-network
     ports:
       - 3000:3000
     networks:
-        - bdd
         - traefik-network
 
   # Private API who work with the keycloak server to authenticate the user and modify the database
   api-python:
-    build: api-python/
+    build: ./api-python/
     image: api-python
     container_name: api-python
     restart: unless-stopped
@@ -31,15 +24,7 @@ services:
         - postgresql
         - keycloak
         - api-get-express
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.api-python.rule=Host(`python.docker.localhost`)
-      - traefik.http.routers.api-python.entrypoints=web-secure
-      - traefik.http.routers.api-python.tls=true
-      - traefik.docker.network=traefik-network
     networks:
-      - bdd
-      - keycloak
       - traefik-network
     ports:
       - 5001:5001
@@ -57,74 +42,33 @@ services:
     ports:
       - 5432:5432
     networks:
-      - bdd
+      - traefik-network
 
-  # The reverse proxy to redirect the request to the good server
-  traefik:
-    image: traefik
-    container_name: "traefik"
+  # Reverse proxy to redirect the request to the good container
+  apache-oidc:
+    build: ./apache-oidc
     networks:
       - traefik-network
     ports:
       - "80:80"
       - "443:443"
-      - 8081:8080
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`monitor.docker.localhost`)
-      - traefik.http.routers.traefik.entrypoints=web-secure
-      - traefik.http.routers.traefik.tls=true
-      - traefik.docker.network=traefik-network
-      - traefik.http.routers.traefik.service=api@internal
-
-    volumes:
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/certs:/etc/certs:ro
-      - ./traefik/config.yml:/etc/traefik/config.yml:ro
-
-    restart: unless-stopped
-
+    environment:
+      OIDC_PROVIDER_METADATA_URL: http://keycloak:8080/realms/deadpoetssociety/.well-known/openid-configuration
+      OIDC_CLIENT_ID: apache-oidc
+      OIDC_CLIENT_SECRET: 654ckxBaivlZkQVOzcyuWrsGnfDxc3mQ
+      OIDC_CRYPTO_PASSPHRASE: theMegaPassPhraseOfTheDeath
 
   # Keycloak server to authenticate the user
   keycloak:
-    image: jboss/keycloak:latest
-    restart: on-failure
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=password
-      - DB_VENDOR=postgres
-      - DB_USER=admin
-      - DB_PASSWORD=password
-      - DB_ADDR=keycloak-db
-      - DB_PORT=5432
-      - DB_DATABASE=keycloakdb
-      - PROXY_ADDRESS_FORWARDING=true
-    depends_on:
-      - keycloak-db
-    volumes:
-      - ./keycloak/realm-export.json:/tmp/realm-export.json
-    ports:
-        - 8080:8080
+    image: quay.io/keycloak/keycloak:latest
     networks:
-      - keycloak
-    command:
-      - "-Dkeycloak.import=/tmp/realm-export.json"
-
-  keycloak-db:
-    image: postgres:10
+      - traefik-network
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: keycloakdb
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - keycloak
-
-
-
-
+      - ./keycloak:/opt/keycloak/data/import:ro
+    command: start-dev --import-realm --proxy edge --hostname-strict=false --hostname-url="https://dps.epita.local/auth" --hostname-admin-url="https://dps.epita.local/auth"
 
 volumes:
   # Volume to store keycloak config
@@ -135,15 +79,8 @@ volumes:
     driver: local
 
 networks:
-    # Network to connect the api and the database
-    bdd:
-
-    # Network to connect the api to keycloak
-    keycloak:
-
     # Network to connect the api to traefik (reverse proxy)
     traefik-network:
-      name: traefik-network
 
 
 

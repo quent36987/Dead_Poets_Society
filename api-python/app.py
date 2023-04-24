@@ -1,31 +1,6 @@
 from flask import Flask, jsonify, request
 import psycopg2
 from datetime import datetime
-from keycloak import KeycloakOpenID
-
-# Configurer les informations de connexion à Keycloak
-
-
-username = 'quentin'
-password = 'quentin123'
-
-# Créer une instance de KeycloakOpenID
-keycloak_openid = KeycloakOpenID(
-    server_url="http://keycloak:8080/auth/",
-    client_id="python-local",
-    realm_name="test",
-)
-
-# Authentification de l'utilisateur
-token = keycloak_openid.token(username=username, password=password)
-
-# Obtenir les informations d'utilisateur à partir du jeton d'accès
-user_info = keycloak_openid.userinfo(token['access_token'])
-
-# Utiliser les informations d'utilisateur dans votre application
-print("Nom d'utilisateur :", user_info['preferred_username'])
-print("Nom complet :", user_info['name'])
-print("Adresse e-mail :", user_info['email'])
 
 app = Flask(__name__)
 

@@ -1,0 +1,15 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+prompt = no
+[req_distinguished_name]
+C   = FR
+ST  = Rhone
+L   = Lyon
+O   = Somewhere
+OU  = R&D
+CN  = dps.epita.local
+[req_ext]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = dps.epita.local
