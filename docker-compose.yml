@@ -9,6 +9,12 @@ services:
     restart: unless-stopped
     depends_on:
       - postgresql
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - 3000:3000
     networks:
@@ -30,6 +36,7 @@ services:
     ports:
       - 5001:5001
 
+  # Subscriber to get the logs from the api-python
   sub-log:
     build: ./sub-log/
     image: sub-log
@@ -57,9 +64,9 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - 5432:5432
     networks:
@@ -74,10 +81,11 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      OIDC_PROVIDER_METADATA_URL: http://keycloak:8080/realms/deadpoetssociety/.well-known/openid-configuration
-      OIDC_CLIENT_ID: apache-oidc
-      OIDC_CLIENT_SECRET: 654ckxBaivlZkQVOzcyuWrsGnfDxc3mQ
-      OIDC_CRYPTO_PASSPHRASE: theMegaPassPhraseOfTheDeath
+      OIDC_PROVIDER_METADATA_URL: ${OIDC_PROVIDER_METADATA_URL}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_CRYPTO_PASSPHRASE: ${OIDC_CRYPTO_PASSPHRASE}
+      DOMAIN: ${DOMAIN}
 
   # Keycloak server to authenticate the user
   keycloak:
@@ -85,8 +93,8 @@ services:
     networks:
       - traefik-network
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     volumes:
       - ./keycloak:/opt/keycloak/data/import:ro
       - pgdata:/opt/keycloak/data

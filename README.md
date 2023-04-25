@@ -1,3 +1,7 @@
-- premier lancement: keycloak config (export et mettre volume ?)
-init bdd pour create table
+# DEAD POETS SOCIETY
 
+https://dps.epita.local
+
+https://dps.epita.local/public-api/
+
+https://dps.epita.local/private-api/
