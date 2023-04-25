@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 import psycopg2
 from datetime import datetime
+import redis
+
 
 app = Flask(__name__)
 
@@ -15,6 +17,13 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 
+r = redis.Redis(
+    host='redis',
+    port=6379,
+    decode_responses=True # <-- this will ensure that binary data is decoded
+)
+
+
 @app.route('/')
 def hello():
     return "Hello, Flask Dockerized!"
@@ -22,6 +31,9 @@ def hello():
 # Route pour obtenir toutes les lettres
 @app.route('/circles', methods=['GET'])
 def get_letters():
+     # #get the username with keycloak cookie
+     # username = request.cookies.get('username')
+     r.publish('my-channel', 'hello world')
      cursor = conn.cursor()
      cursor.execute('SELECT * FROM circle;')
      letters = cursor.fetchall()

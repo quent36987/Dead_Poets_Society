@@ -24,10 +24,31 @@ services:
         - postgresql
         - keycloak
         - api-get-express
+        - redis
     networks:
       - traefik-network
     ports:
       - 5001:5001
+
+  sub-log:
+    build: ./sub-log/
+    image: sub-log
+    container_name: sub-log
+    restart: unless-stopped
+    depends_on:
+        - api-python
+        - redis
+    networks:
+      - traefik-network
+
+  # Redis to publish and subscribe to the api-python
+  redis:
+    image: redis:6.2.5-alpine
+    restart: unless-stopped
+    networks:
+    - traefik-network
+    ports:
+    - 6379:6379
 
   # Database to store all the data
   postgresql:
@@ -68,6 +89,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - ./keycloak:/opt/keycloak/data/import:ro
+      - pgdata:/opt/keycloak/data
     command: start-dev --import-realm --proxy edge --hostname-strict=false --hostname-url="https://dps.epita.local/auth" --hostname-admin-url="https://dps.epita.local/auth"
 
 volumes:
