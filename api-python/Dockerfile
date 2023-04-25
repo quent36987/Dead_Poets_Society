@@ -9,6 +9,7 @@ RUN pip install -r requirements.txt
 
 # Expose le port sur lequel l'application écoutera
 COPY app.py .
+COPY templates ./templates
 EXPOSE 5001
 
 # Démarre l'application Flask
