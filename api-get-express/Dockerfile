@@ -14,8 +14,6 @@ RUN npm install
 
 COPY --chown=node:node ./ .
 
-RUN npx prisma generate
-
 EXPOSE 3000
 
-ENTRYPOINT ["./init-bdd.sh"]
+CMD npx prisma migrate dev --name init && npm run seed && npm run dev

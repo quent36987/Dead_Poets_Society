@@ -1,0 +1,12 @@
+build
+node_modules
+.idea
+.vscode
+.git
+.gitignore
+LICENSE
+README.md
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc.js

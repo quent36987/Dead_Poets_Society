@@ -1,0 +1,18 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    border-right: #3c4046 1px solid;
+
+    width: 150px;
+}
+
+.header-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: #3c4046 1px solid;
+    cursor: default;
+}

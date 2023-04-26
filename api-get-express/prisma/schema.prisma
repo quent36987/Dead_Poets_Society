@@ -13,14 +13,14 @@ model writer {
   name         String
   pseudo       String
   Letter       letter[]
-  WriterCircle WriterCircle[]
+  writerCircle writerCircle[]
 }
 
 model circle {
   id           Int            @id @default(autoincrement())
   name         String
   Letter       letter[]
-  WriterCircle WriterCircle[]
+  writerCircle writerCircle[]
 }
 
 model letter {
@@ -43,7 +43,7 @@ model letter {
   repliesTo letter[] @relation("replyTo")
 }
 
-model WriterCircle {
+model writerCircle {
   circle   circle @relation(fields: [circleId], references: [id])
   circleId Int
 

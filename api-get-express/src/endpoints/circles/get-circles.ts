@@ -20,7 +20,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.get('/:id/writers', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id)
     const circlesWriters = await prisma.writer.findMany({
-        where: { WriterCircle: {
+        where: { writerCircle: {
             some: {
                 circle:{
                     id: id

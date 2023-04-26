@@ -1,0 +1,22 @@
+.field {
+    display: flex;
+    flex-direction: column;
+
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+    width: 100%;
+}
+
+.field-label {
+    font-size: var(--font-size-s);
+    font-weight: 500;
+}
+
+.field-value {
+    padding: var(--spacing-s) var(--spacing-m);
+    border: var(--light-gray) 1px solid;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-m);
+    color: var(--gray);
+}

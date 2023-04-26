@@ -18,7 +18,8 @@ services:
     ports:
       - 3000:3000
     networks:
-        - traefik-network
+        - api-get-express-network
+        - bdd-network
 
   # Private API who work with the keycloak server to authenticate the user and modify the database
   api-python:
@@ -32,9 +33,25 @@ services:
         - api-get-express
         - redis
     networks:
-      - traefik-network
+      - api-python-network
+      - redis-network
+      - bdd-network
     ports:
-      - 5001:5001
+      - 5003:5001
+
+  # Front in React (with ngnix)
+  front-js:
+      build: ./dps-front/
+      image: front
+      container_name: front
+      restart: unless-stopped
+      depends_on:
+          - api-python
+          - api-get-express
+      networks:
+        - front-network
+      ports:
+        - "8083:80"
 
   # Subscriber to get the logs from the api-python
   sub-log:
@@ -46,14 +63,14 @@ services:
         - api-python
         - redis
     networks:
-      - traefik-network
+      - redis-network
 
   # Redis to publish and subscribe to the api-python
   redis:
     image: redis:6.2.5-alpine
     restart: unless-stopped
     networks:
-    - traefik-network
+      - redis-network
     ports:
     - 6379:6379
 
@@ -70,13 +87,17 @@ services:
     ports:
       - 5432:5432
     networks:
-      - traefik-network
+      - bdd-network
 
   # Reverse proxy to redirect the request to the good container
   apache-oidc:
     build: ./apache-oidc
     networks:
-      - traefik-network
+      - keycloak-network
+      - api-python-network
+      - api-get-express-network
+      - bdd-network
+      - front-network
     ports:
       - "80:80"
       - "443:443"
@@ -91,7 +112,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     networks:
-      - traefik-network
+      - keycloak-network
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
@@ -110,7 +131,13 @@ volumes:
 
 networks:
     # Network to connect the api to traefik (reverse proxy)
-    traefik-network:
+    keycloak-network:
+    api-python-network:
+    api-get-express-network:
+    bdd-network:
+    front-network:
+    sub-log-network:
+    redis-network:
 
 
 

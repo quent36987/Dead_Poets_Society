@@ -62,6 +62,14 @@ const circles: Prisma.circleCreateInput[] = [
 
 async function main() {
     console.log(`Start seeding ...`);
+    // verifie si les données existent déjà
+    const allWriters = await prisma.writer.findMany();
+    const allCircles = await prisma.circle.findMany();
+    if (allWriters.length > 0 || allCircles.length > 0) {
+        console.log(`Data already exists, seeding skipped.`);
+        return;
+    }
+
     for (const w of writers) {
         const writer = await prisma.writer.create({
             data: w
