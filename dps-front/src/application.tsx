@@ -3,8 +3,8 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { Home } from './componant/page/Home';
 import { Header } from './componant/common/Header';
 import { paths } from './constant/routes';
-import {Page} from "./componant/page/Page";
-import {HOMEPAGE} from "./constant/env";
+import { Page } from './componant/page/Page';
+import { HOMEPAGE } from './constant/env';
 
 const Application = (): JSX.Element => {
     const pages: Array<{ path: string; element: JSX.Element }> = [
@@ -15,7 +15,7 @@ const Application = (): JSX.Element => {
         {
             path: `/page`,
             element: <Page />
-        },
+        }
     ];
 
     return (
@@ -26,7 +26,11 @@ const Application = (): JSX.Element => {
                 <div className="padding-s pages">
                     <Routes>
                         {pages.map((page, i) => (
-                            <Route key={`page-${i}`} path={`/${HOMEPAGE}${page.path}`} element={page.element} />
+                            <Route
+                                key={`page-${i}`}
+                                path={`/${HOMEPAGE}${page.path}`}
+                                element={page.element}
+                            />
                         ))}
                     </Routes>
                 </div>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { get } from '../../utils/axios';
-import {SERVER_URL} from "../../constant/env";
+import { getCircles } from '../../object/circles/endpoint';
 
 const Home = (): JSX.Element => {
     useEffect(() => {
@@ -9,11 +8,11 @@ const Home = (): JSX.Element => {
     }, []);
 
     async function test(): Promise<void> {
-        const response = await get(SERVER_URL,'circles', {}).catch((e) => console.log(e));
+        const response = await getCircles();
         console.log(response);
     }
 
-    return <div>Home</div>;
+    return <div></div>;
 };
 
 export { Home };

@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { SERVER_URL } from '../constant/env';
 import { errorLog, infoLog } from './logger';
 
 async function get(server: string, address: string, params: any): Promise<any> {
-    infoLog('[GET][SEND]', address, params);
+    infoLog('[GET][SEND]', `${server}/${address}`, params);
 
     const data = await axios.get(`${server}/${address}`, params).catch((error) => {
         errorLog('[GET]', error.message, error);
@@ -20,10 +19,10 @@ async function get(server: string, address: string, params: any): Promise<any> {
     return data.data;
 }
 
-async function post(address: string, params: any): Promise<any> {
-    infoLog('[POST][SEND]', address, params);
+async function post(server: string, address: string, params: any): Promise<any> {
+    infoLog('[POST][SEND]', `${server}/${address}`, params);
 
-    const data = await axios.post(`${SERVER_URL}/${address}`, params).catch((error) => {
+    const data = await axios.post(`${server}/${address}`, params).catch((error) => {
         errorLog('[POST]', error.message, error);
 
         if (error.response.status >= 400 && error.response.status < 500) {
@@ -38,10 +37,10 @@ async function post(address: string, params: any): Promise<any> {
     return data.data;
 }
 
-async function put(address: string, params: any): Promise<any> {
-    infoLog('[PUT][SEND]', `${SERVER_URL}/${address}`, params);
+async function put(server: string, address: string, params: any): Promise<any> {
+    infoLog('[PUT][SEND]', `${server}/${address}`, params);
 
-    const data = await axios.put(`${SERVER_URL}/${address}`, params).catch((error) => {
+    const data = await axios.put(`${server}/${address}`, params).catch((error) => {
         errorLog('[PUT]', error.message, error);
 
         if (error.response.status >= 400 && error.response.status < 500) {
@@ -56,10 +55,10 @@ async function put(address: string, params: any): Promise<any> {
     return data.data;
 }
 
-async function delete_(address: string, params: any): Promise<any> {
-    infoLog('[DELETE][SEND]', address, params);
+async function delete_(server: string, address: string, params: any): Promise<any> {
+    infoLog('[DELETE][SEND]', `${server}/${address}`, params);
 
-    const data = await axios.delete(`${SERVER_URL}/${address}`, params).catch((error) => {
+    const data = await axios.delete(`${server}/${address}`, params).catch((error) => {
         errorLog('[DELETE]', error.message, error);
 
         if (error.response.status >= 400 && error.response.status < 500) {
