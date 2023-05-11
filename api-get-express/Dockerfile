@@ -13,7 +13,8 @@ RUN npm install
 
 
 COPY --chown=node:node ./ .
+RUN chmod +x entrypoint.sh
 
 EXPOSE 3000
 
-CMD npx prisma migrate dev --name init && npm run seed && npm run dev
+ENTRYPOINT ["./entrypoint.sh"]
