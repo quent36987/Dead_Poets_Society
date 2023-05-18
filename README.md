@@ -82,3 +82,8 @@ The user don't need to be authenticated to use it.
 
 url : https://dps.epita.local/public-api/
 
+### Python Subscriber
+
+The python subscriber is a python script who subscribe to the redis channel and print the message.
+It's print a message when a user is created.
+
