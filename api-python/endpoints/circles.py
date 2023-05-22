@@ -90,7 +90,21 @@ def circles_endpoints(app, r, conn):
             conn.rollback()
             cursor.close()
             return jsonify({'error': f'Failed to join circle: {e}; id = {id}, userId = {userId}'}), 500
+    
+    @app.route('/circles/<int:id>/join/<int:userid>', methods=['POST'])
+    def make_join_circle(id, userid):
+        cursor = conn.cursor()
+        try:
+            cursor.execute('INSERT INTO \"writerCircle\" VALUES (%s, %s);', (id, userid,))
+            conn.commit()
+            cursor.close()
+            return jsonify({'sucess': f'Sucess in joining circle with id {id}'})
         
+        except psycopg2.Error as e:
+            conn.rollback()
+            cursor.close()
+            return jsonify({'error': f'Failed to join circle: {e}; id = {id}, userId = {userid}'}), 500
+    
     # Quit a circle
     @app.route('/circles/<int:id>/quit', methods=['PATCH'])
     def quit_circle(id):
@@ -107,5 +121,17 @@ def circles_endpoints(app, r, conn):
             conn.rollback()
             cursor.close()
             return jsonify({'error': f'Failed to quit circle: {e}'}), 500
-
+    
+    @app.route('/circles/<int:id>/quit/<int:userid>', methods=['PATCH'])
+    def make_quit_circle(id, userid):
+        cursor = conn.cursor()
+        try:
+            cursor.execute('DELETE FROM \"writerCircle\" WHERE \"circleId\" = %s AND \"writerId\" = %s;', (id, userid,))
+            conn.commit()
+            cursor.close()
+            return jsonify({'sucess': f'Sucess in quiting circle with id {id}'})
         
+        except psycopg2.Error as e:
+            conn.rollback()
+            cursor.close()
+            return jsonify({'error': f'Failed to quit circle: {e}'}), 500
