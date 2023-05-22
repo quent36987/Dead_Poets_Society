@@ -6,7 +6,7 @@ const asyncHandler =
     (fn: AsyncRequestHandler) => (req: Request, res: Response, next: NextFunction) => {
         Promise.resolve(fn(req, res, next)).catch(() => {
             res.status(404).json({
-                error: 'qqqqqdksjhfdskjbfvbvdkjasfbsdakjfbadsgfb'
+                error: 'Error: can not open the url'
             });
         });
     };

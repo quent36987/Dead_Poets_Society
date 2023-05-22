@@ -1,27 +1,36 @@
-# SOA Project TP1
+# API Express
 
-> Adrien LORGE
-> Annabelle CHEVREAU
-> Florian REIMAT
-> Quentin GOUJON
+The API Express is a public api, it's all the GET to the database. The user don't need to be authenticated to use it.
 
-## How to install / launch it
+url: https://dps.epita.local/public-api
 
-```sh
-git clone https://gitlab.cri.epita.fr/florian.reimat/soa_rest.git
+## Endpoints
+Endpoints are specific location where requests for information are sent. They are used to get information or resources.
+In this api, there is multiple endpoints to get information about circles, writers and letters.
+All the endpoints must be preceded by the api express url (https://dps.epita.local/public-api)
 
-# If you are on Nix
-# nix-shell
+### Circles
+/circles : get all the circles
+/circles/{id} : get information about the specified circle
+/circles/{id}/writers : get writers belonging to the circle
+/circles/{id}/letters :
 
-cp .env.default .env
+{id} must be replaced with a circle id
 
-docker-compose up -d
+### Writers
+/writers : get all the writers
+/writers/{id} : get information about the specified writer
+/writers/{id}/letters : get letters written by the writer
+/writers/{id}/circles : get membership circles of the writer
+/writers/{id}/circles/{circleId}/letters : get letters from the specified writer into the specified circle
 
-npx prisma migrate dev --name init
+{id} must be replaced with a writer id
+{circleId} must be replaced with a circle id
 
-npm run seed
-npm run dev
-```
+### Letters
+/letters : get all the letters
+/letters/{id} : get information about the specified letter
+/letters/{id}/writers :
+/letters/{id}/circles :
 
-Please don't forget to setup the env file before launching the docker-compose
-The default .env file is this one [.env.default](.env.default).
+{id} must be replaced with a letter id
