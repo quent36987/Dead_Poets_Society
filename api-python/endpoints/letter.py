@@ -52,6 +52,7 @@ def letter_endpoints(app, r, conn):
             )
 
             letter_id = cursor.fetchone()[0]
+            conn.commit()
             cursor.close()
 
             return jsonify({'message': f'letter posted successfully with ID {letter_id}'}), 201
@@ -143,6 +144,7 @@ def letter_endpoints(app, r, conn):
             )
 
             letter_id = cursor.fetchone()[0]
+            conn.commit()
             cursor.close()
 
             return jsonify({'message': f'letter posted successfully with ID {letter_id}'}), 201

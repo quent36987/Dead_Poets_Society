@@ -85,6 +85,7 @@ def circles_endpoints(app, r, conn):
             conn.commit()
             cursor.close()
             return jsonify({'sucess': f'Sucess in joining circle with id {id}'})
+        
         except psycopg2.Error as e:
             conn.rollback()
             cursor.close()
@@ -101,6 +102,7 @@ def circles_endpoints(app, r, conn):
             conn.commit()
             cursor.close()
             return jsonify({'sucess': f'Sucess in quiting circle with id {id}'})
+        
         except psycopg2.Error as e:
             conn.rollback()
             cursor.close()

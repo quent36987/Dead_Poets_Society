@@ -42,8 +42,10 @@ def writer_endpoints(app, r, conn):
             
             cursor.execute('INSERT INTO writer (title, name, pseudo) VALUES (%s,%s,%s) RETURNING id;', (title, name, pseudo,))
             writter_id = cursor.fetchone()[0]
+            conn.commit()
             cursor.close()
             return jsonify({'sucess': f"id = {writter_id}"})
+        
         except psycopg2.Error as e:
             cursor.close()
             return jsonify({'error': f'Failed to post new writer: {e}'}), 500
@@ -62,6 +64,7 @@ def writer_endpoints(app, r, conn):
             pseudo = body["pseudo"] if body["pseudo"] != None else writer[2]
 
             cursor.execute('UPDATE writer SET title = %s, pseudo = %s where id = %s;', (title, pseudo, writer[0],))
+            conn.commit()
             cursor.close()
             return jsonify({'success': f'Update writer {writer[0]}'}), 200
 
