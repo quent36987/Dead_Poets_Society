@@ -12,15 +12,15 @@ model writer {
   title        String?
   name         String
   pseudo       String
-  Letter       letter[]
-  writerCircle writerCircle[]
+  letters      letter[]
+  circles      circle[]
 }
 
 model circle {
   id           Int            @id @default(autoincrement())
   name         String
-  Letter       letter[]
-  writerCircle writerCircle[]
+  letters      letter[]
+  writers      writer[]
 }
 
 model letter {
@@ -41,14 +41,4 @@ model letter {
   replyId Int?
 
   repliesTo letter[] @relation("replyTo")
-}
-
-model writerCircle {
-  circle   circle @relation(fields: [circleId], references: [id])
-  circleId Int
-
-  writer   writer @relation(fields: [writerId], references: [id])
-  writerId Int
-
-  @@id([circleId, writerId])
 }
