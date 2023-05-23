@@ -1,23 +1,10 @@
 from flask import jsonify, request
 from datetime import datetime
 import psycopg2
+from utilsEndpoints import getOrCreateWritterId
 
 def circles_endpoints(app, r, conn):
-
-    def getOrCreateWritterId(username):
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM writer WHERE name = %s;', (username,))
-        writter = cursor.fetchone()
-        if writter:
-            return writter[0]
-        else:
-            cursor.execute('INSERT INTO writer (name,pseudo) VALUES (%s,%s) RETURNING id;', (username,username))
-            writter_id = cursor.fetchone()[0]
-            conn.commit()
-            cursor.close()
-            return writter_id
         
-    
     # Route pour obtenir toutes les lettres d'un cercle
     @app.route('/circles', methods=['GET'])
     def get_circles():
@@ -80,7 +67,7 @@ def circles_endpoints(app, r, conn):
         cursor = conn.cursor()
         username = request.headers.get('X-Remote-User')
         try:
-            userId = getOrCreateWritterId(username)
+            userId = getOrCreateWritterId(username, app, conn)
             cursor.execute('INSERT INTO \"writerCircle\" VALUES (%s, %s);', (id, userId,))
             conn.commit()
             cursor.close()
@@ -91,30 +78,33 @@ def circles_endpoints(app, r, conn):
             cursor.close()
             return jsonify({'error': f'Failed to join circle: {e}; id = {id}, userId = {userId}'}), 500
     
-    @app.route('/circles/<int:id>/join/<int:userid>', methods=['POST'])
-    def make_join_circle(id, userid):
-        cursor = conn.cursor()
-        try:
-            cursor.execute('INSERT INTO \"writerCircle\" VALUES (%s, %s);', (id, userid,))
-            conn.commit()
-            cursor.close()
-            return jsonify({'sucess': f'Sucess in joining circle with id {id}'})
+    # FIXME
+    # @app.route('/circles/<int:id>/join/<str:username>', methods=['POST'])
+    # def make_join_circle(id, username):
+    #     cursor = conn.cursor()
+    #     try:
+    #         userid = getOrCreateWritterId(username, app, conn)
+    #         cursor.execute('INSERT INTO \"writerCircle\" VALUES (%s, %s);', (id, userid,))
+    #         conn.commit()
+    #         cursor.close()
+    #         return jsonify({'sucess': f'Sucess in joining circle with id {id}'})
         
-        except psycopg2.Error as e:
-            conn.rollback()
-            cursor.close()
-            return jsonify({'error': f'Failed to join circle: {e}; id = {id}, userId = {userid}'}), 500
+    #     except psycopg2.Error as e:
+    #         conn.rollback()
+    #         cursor.close()
+    #         return jsonify({'error': f'Failed to join circle: {e}; id = {id}, userId = {userid}'}), 500
     
     # Quit a circle
-    @app.route('/circles/<int:id>/quit', methods=['PATCH'])
+    @app.route('/circles/<int:id>/quit', methods=['PUT'])
     def quit_circle(id):
         cursor = conn.cursor()
-        username = request.headers.get('X-Remote-User')
         try:
-            userId = getOrCreateWritterId(username)
+            username = request.headers.get('X-Remote-User')
+            userId = getOrCreateWritterId(username, app, conn)
             cursor.execute('DELETE FROM \"writerCircle\" WHERE \"circleId\" = %s AND \"writerId\" = %s;', (id, userId,))
             conn.commit()
             cursor.close()
+
             return jsonify({'sucess': f'Sucess in quiting circle with id {id}'})
         
         except psycopg2.Error as e:
@@ -122,16 +112,18 @@ def circles_endpoints(app, r, conn):
             cursor.close()
             return jsonify({'error': f'Failed to quit circle: {e}'}), 500
     
-    @app.route('/circles/<int:id>/quit/<int:userid>', methods=['PATCH'])
-    def make_quit_circle(id, userid):
-        cursor = conn.cursor()
-        try:
-            cursor.execute('DELETE FROM \"writerCircle\" WHERE \"circleId\" = %s AND \"writerId\" = %s;', (id, userid,))
-            conn.commit()
-            cursor.close()
-            return jsonify({'sucess': f'Sucess in quiting circle with id {id}'})
+    # FIXME
+    # @app.route('/circles/<int:id>/quit/<str:username>', methods=['PUT'])
+    # def make_quit_circle(id, username):
+    #     cursor = conn.cursor()
+    #     try:
+    #         userid = getOrCreateWritterId(username, app, conn)
+    #         cursor.execute('DELETE FROM \"writerCircle\" WHERE \"circleId\" = %s AND \"writerId\" = %s;', (id, userid,))
+    #         conn.commit()
+    #         cursor.close()
+    #         return jsonify({'sucess': f'Sucess in quiting circle with id {id}'})
         
-        except psycopg2.Error as e:
-            conn.rollback()
-            cursor.close()
-            return jsonify({'error': f'Failed to quit circle: {e}'}), 500
+    #     except psycopg2.Error as e:
+    #         conn.rollback()
+    #         cursor.close()
+    #         return jsonify({'error': f'Failed to quit circle: {e}'}), 500

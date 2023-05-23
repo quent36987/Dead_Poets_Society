@@ -17,14 +17,12 @@ All the endpoints must be preceded by the api express url (https://dps.epita.loc
 ### circles endpoints:
  - POST: /circles; body: name; create new circle
  - POST: /circles/<int:id>/join; join circle
- - POST: /circles/<int:id>/join/<int:userid>; make user userid join circle id
  - PATCH /circles/<int:id>/quit; quit circle
- - PATCH: /circles/<int:id>/quit/<int:userid>; make user userid join circle id
  - /!\ DELETE endpoint not open yet
 
 
 ### letter endpoints:
  - POST: /letter; body: circleid, subject, content; post new letter
- - POST: /letter/reply/<int:id>; body: circleid, subject, content; reply to letter
+ - POST: /letter/<int:id>/reply; body: circleid, subject, content; reply to letter
  - PATCH: /letter/<int:id>; body: subject, content; update letter
  - DELETE: /letter/<int:id>; delete letter with id id
