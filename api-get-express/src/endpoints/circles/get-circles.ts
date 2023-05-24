@@ -3,48 +3,60 @@ import { Router, type Request, type Response } from 'express';
 import asyncHandler from '../../asyncHandler';
 
 const prisma = new PrismaClient();
-const router: Router = Router();
+const circleRouter: Router = Router();
 
-router.get(
+circleRouter.get(
     '/',
     asyncHandler(async (req: Request, res: Response) => {
         const circles = await prisma.circle.findMany();
+
         res.json(circles);
     })
 );
 
-router.get(
+circleRouter.get(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
 
-        const circles = await prisma.circle.findUnique({
+        const circle = await prisma.circle.findUnique({
             where: { id }
         });
 
-        res.json(circles);
+        res.json(circle);
     })
 );
 
-router.get(
+circleRouter.get(
     '/:id/writers',
     asyncHandler(async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
 
-        const circlesWriters = await prisma.writer.findMany({
-            where: {
-                writerCircle: {
-                    some: {
-                        circle: {
-                            id
-                        }
-                    }
-                }
+        const circle = await prisma.circle.findUnique({
+            where: { id },
+            include: {
+                writers: true
             }
         });
 
-        res.json(circlesWriters);
+        res.json(circle?.writers);
     })
 );
 
-export const GetCirclesController: Router = router;
+circleRouter.get(
+    '/:id/letters',
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+
+        const circle = await prisma.circle.findUnique({
+            where: { id },
+            include: {
+                letters: true
+            }
+        });
+
+        res.json(circle?.letters);
+    })
+);
+
+export const GetCirclesController: Router = circleRouter;

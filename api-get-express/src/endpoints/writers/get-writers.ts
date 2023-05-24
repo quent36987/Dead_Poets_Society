@@ -3,9 +3,9 @@ import { Router, type Request, type Response } from 'express';
 import asyncHandler from '../../asyncHandler';
 
 const prisma = new PrismaClient();
-const router: Router = Router();
+const writerRouter: Router = Router();
 
-router.get(
+writerRouter.get(
     '/',
     asyncHandler(async (req: Request, res: Response) => {
         const writers = await prisma.writer.findMany();
@@ -14,7 +14,7 @@ router.get(
     })
 );
 
-router.get(
+writerRouter.get(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         const writerId = parseInt(req.params.id);
@@ -24,27 +24,33 @@ router.get(
     })
 );
 
-router.get(
+writerRouter.get(
     '/:id/letters',
     asyncHandler(async (req: Request, res: Response) => {
         const writerId = parseInt(req.params.id);
-        const writers = await prisma.letter.findMany({ where: { writerId } });
+        const letters = await prisma.letter.findMany({ where: { writerId } });
 
-        res.json(writers);
+        res.json(letters);
     })
 );
 
-router.get(
+writerRouter.get(
     '/:id/circles',
     asyncHandler(async (req: Request, res: Response) => {
-        const writerId = parseInt(req.params.id);
-        const writers = await prisma.writerCircle.findMany({ where: { writerId } });
+        const id = parseInt(req.params.id);
 
-        res.json(writers);
+        const writer = await prisma.writer.findUnique({
+            where: { id },
+            include: {
+                circles: true
+            }
+        });
+
+        res.json(writer?.circles);
     })
 );
 
-router.get(
+writerRouter.get(
     '/:writerId/circles/:circleId/letters',
     asyncHandler(async (req: Request, res: Response) => {
         const writerId = parseInt(req.params.writerId);
@@ -58,4 +64,4 @@ router.get(
     })
 );
 
-export const GetWritersController: Router = router;
+export const GetWritersController: Router = writerRouter;

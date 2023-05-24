@@ -1,21 +1,9 @@
 from flask import jsonify, request
 from datetime import datetime
 import psycopg2
+from utilsEndpoints import getOrCreateWritterId
 
 def letter_endpoints(app, r, conn):
-
-    def getOrCreateWritterId(username):
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM writer WHERE name = %s;', (username,))
-        writter = cursor.fetchone()
-        if writter:
-            return writter[0]
-        else:
-            cursor.execute('INSERT INTO writer (name,pseudo) VALUES (%s,%s) RETURNING id;', (username,username))
-            writter_id = cursor.fetchone()[0]
-            conn.commit()
-            cursor.close()
-            return writter_id
         
     @app.route('/letter/<int:id>', methods=['GET'])
     def get_letter(id):
@@ -31,7 +19,7 @@ def letter_endpoints(app, r, conn):
         cursor = conn.cursor()
         
         username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username)
+        writerId = getOrCreateWritterId(username, app, conn)
 
         circleId = request.json['circleid']
         postAt = updatedAt = datetime.now()
@@ -65,7 +53,7 @@ def letter_endpoints(app, r, conn):
     @app.route('/letter/<int:id>', methods=['PATCH'])
     def put_letter(id):
         username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username)
+        writerId = getOrCreateWritterId(username, app, conn)
 
         cursor = conn.cursor()
         try:
@@ -97,7 +85,7 @@ def letter_endpoints(app, r, conn):
     @app.route('/letter/<int:id>', methods=['DELETE'])
     def delete_letter(id):
         username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username)
+        writerId = getOrCreateWritterId(username, app, conn)
 
         cursor = conn.cursor()
         try:
@@ -118,12 +106,12 @@ def letter_endpoints(app, r, conn):
         except psycopg2.Error as e:
             return jsonify({'error': f'Failed to modify letter: {e}'}), 500
             
-    @app.route('/letter/reply/<int:id>', methods=['POST'])
+    @app.route('/letter/<int:id>/reply', methods=['POST'])
     def reply_to_letter(id):
         cursor = conn.cursor()
         
         username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username)
+        writerId = getOrCreateWritterId(username, app, conn)
 
         circleId = request.json['circleid']
         postAt = updatedAt = datetime.now()

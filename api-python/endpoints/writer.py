@@ -1,21 +1,9 @@
 from flask import jsonify, request
 from datetime import datetime
 import psycopg2
+from utilsEndpoints import getOrCreateWritterId
 
 def writer_endpoints(app, r, conn):
-
-    def getOrCreateWritterId(username):
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM writer WHERE name = %s;', (username,))
-        writter = cursor.fetchone()
-        if writter:
-            return writter[0]
-        else:
-            cursor.execute('INSERT INTO writer (name,pseudo) VALUES (%s,%s) RETURNING id;', (username,username))
-            writter_id = cursor.fetchone()[0]
-            conn.commit()
-            cursor.close()
-            return writter_id
     
     @app.route('/writer', methods=['GET'])
     def get_writer():
@@ -54,7 +42,7 @@ def writer_endpoints(app, r, conn):
     def put_writer():
         cursor = conn.cursor()
         username = request.headers.get('X-Remote-User')
-        id = getOrCreateWritterId(username)
+        id = getOrCreateWritterId(username, app, conn)
         try:
             cursor.execute('SELECT * FROM writer WHERE id = %s;', (id,))
             writer = cursor.fetchone()
