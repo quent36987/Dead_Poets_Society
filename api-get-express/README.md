@@ -10,27 +10,27 @@ In this api, there is multiple endpoints to get information about circles, write
 All the endpoints must be preceded by the api express url (https://dps.epita.local/public-api)
 
 ### Circles
-/circles : get all the circles <br />
-/circles/{id} : get information about the specified circle <br />
-/circles/{id}/writers : get writers belonging to the circle <br />
-/circles/{id}/letters : get letters from the specified circle
+[/circles](https://dps.epita.local/public-api/circles) : get all the circles <br />
+[/circles/{circleId}](https://dps.epita.local/public-api/circles/1) : get information about the specified circle <br />
+[/circles/{circleId}/writers](https://dps.epita.local/public-api/circles/1/writers) : get writers belonging to the circle <br />
+[/circles/{circleId}/letters](https://dps.epita.local/public-api/circles/1/letters) : get letters from the specified circle
 
-{id} must be replaced with a circle id
+{circleId} must be replaced with a circle id
 
 ### Writers
-/writers : get all the writers <br />
-/writers/{id} : get information about the specified writer <br />
-/writers/{id}/letters : get letters written by the writer <br />
-/writers/{id}/circles : get membership circles of the writer <br />
-/writers/{id}/circles/{circleId}/letters : get letters from the specified writer into the specified circle
+[/writers](https://dps.epita.local/public-api/writers) : get all the writers <br />
+[/writers/{writerId}](https://dps.epita.local/public-api/writers/1) : get information about the specified writer <br />
+[/writers/{writerId}/letters](https://dps.epita.local/public-api/writers/1/letters) : get letters written by the writer <br />
+[/writers/{writerId}/circles](https://dps.epita.local/public-api/writers/1/circles) : get membership circles of the writer <br />
+[/writers/{writerId}/circles/{circleId}/letters](https://dps.epita.local/public-api/writers/1/circles/1/letters) : get letters from the specified writer into the specified circle
 
-{id} must be replaced with a writer id <br />
+{writerId} must be replaced with a writer id <br />
 {circleId} must be replaced with a circle id
 
 ### Letters
-/letters : get all the letters <br />
-/letters/{id} : get information about the specified letter <br />
-/letters/{id}/writer : get the letter writer <br />
-/letters/{id}/circle : get membership circles of the letter
+[/letters](https://dps.epita.local/public-api/letters) : get all the letters <br />
+[/letters/{letterId}](https://dps.epita.local/public-api/letters/1) : get information about the specified letter <br />
+[/letters/{letterId}/writer](https://dps.epita.local/public-api/letters/1/writer) : get the letter writer <br />
+[/letters/{letterId}/circle](https://dps.epita.local/public-api/letters/1/circle) : get membership circles of the letter
 
-{id} must be replaced with a letter id
+{letterId} must be replaced with a letter id

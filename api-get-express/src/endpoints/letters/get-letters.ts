@@ -16,10 +16,10 @@ letterRouter.get(
 letterRouter.get(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
-        const id = req.params;
+        const id = parseInt(req.params.id);
 
         const letter = await prisma.letter.findUnique({
-            where: { id: Number(id) }
+            where: { id }
         });
 
         res.json(letter);
