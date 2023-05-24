@@ -71,14 +71,15 @@ url : https://dps.epita.local/front
 ### API Python
 
 The API Python is a private api, it's all the PUT, POST, DELETE, PATCH to the database.
-The user need to be authenticated to use it.
+The user need to be authenticated to use it. ([endpoint](./api-python/README.md))
 
 url : https://dps.epita.local/private-api/
+
 
 ### API Express
 
 The API Express is a public api, it's all the GET to the database.
-The user don't need to be authenticated to use it.
+The user don't need to be authenticated to use it. ([endpoint](./api-get-express/README.md))
 
 url : https://dps.epita.local/public-api/
 
