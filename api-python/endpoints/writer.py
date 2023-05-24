@@ -1,7 +1,8 @@
 from flask import jsonify, request
 from datetime import datetime
 import psycopg2
-from utilsEndpoints import getOrCreateWritterId
+from .utilsEndpoints import getOrCreateWritterId
+
 
 def writer_endpoints(app, r, conn):
     

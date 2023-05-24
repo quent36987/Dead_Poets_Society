@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from datetime import datetime
 import psycopg2
-from utilsEndpoints import getOrCreateWritterId
+from .utilsEndpoints import getOrCreateWritterId
 
 def circles_endpoints(app, r, conn):
         
