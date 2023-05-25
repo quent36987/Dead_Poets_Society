@@ -5,9 +5,9 @@ import redis
 
 if __name__ == '__main__':
     try:
-        import endpoints.circles as cir
-        import endpoints.writers as wr
-        import endpoints.letters as le
+        import endpoints.circles as circles
+        import endpoints.writers as writers
+        import endpoints.letters as letters
     except ImportError as e:
         raise Exception(__name__) from e
     
@@ -39,8 +39,8 @@ if __name__ == '__main__':
     def headers():
         return render_template('headers.html',headers=request.headers.items())
 
-    cir.circles_endpoints(app, r, conn)
-    wr.writer_endpoints(app, r, conn)
-    le.letter_endpoints(app, r, conn)
+    circles.circles_endpoints(app, r, conn)
+    writers.writer_endpoints(app, r, conn)
+    len.letter_endpoints(app, r, conn)
     
     app.run(debug=True, host='0.0.0.0', port=5001)
