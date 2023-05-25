@@ -41,6 +41,6 @@ if __name__ == '__main__':
 
     circles.circles_endpoints(app, r, conn)
     writers.writer_endpoints(app, r, conn)
-    len.letter_endpoints(app, r, conn)
+    letters.letter_endpoints(app, r, conn)
     
     app.run(debug=True, host='0.0.0.0', port=5001)
