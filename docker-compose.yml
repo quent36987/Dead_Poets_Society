@@ -52,6 +52,9 @@ services:
         - front-network
       ports:
         - "8083:80"
+      # JUST FOR DEV : to avoid to rebuild the image each time
+      profiles:
+        - front
 
   # Subscriber to get the logs from the api-python
   sub-log:
