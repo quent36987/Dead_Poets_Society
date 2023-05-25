@@ -5,7 +5,15 @@ from .utilsEndpoints import getOrCreateWritterId
 
 def letter_endpoints(app, r, conn):
         
-    @app.route('/letter/<int:id>', methods=['GET'])
+    @app.route('/letters', methods=['GET'])
+    def get_letter(id):
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM letter;')
+        letters = cursor.fetchall()
+        cursor.close()
+        return jsonify(letters)
+
+    @app.route('/letters/<int:id>', methods=['GET'])
     def get_letter(id):
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM letter WHERE \"circleId\" = %s;', (id,))
@@ -14,7 +22,7 @@ def letter_endpoints(app, r, conn):
         return jsonify(letters)
 
 
-    @app.route('/letter', methods=['POST'])
+    @app.route('/letters', methods=['POST'])
     def post_letter():
         cursor = conn.cursor()
         
@@ -50,7 +58,7 @@ def letter_endpoints(app, r, conn):
             return jsonify({'error': f'Failed to publish letter: {e}'}), 500
         
     
-    @app.route('/letter/<int:id>', methods=['PATCH'])
+    @app.route('/letters/<int:id>', methods=['PATCH'])
     def put_letter(id):
         username = request.headers.get('X-Remote-User')
         writerId = getOrCreateWritterId(username, app, conn)
@@ -82,7 +90,7 @@ def letter_endpoints(app, r, conn):
             cursor.close()
             return jsonify({'error': f'Failed to modify letter: {e}'}), 500
     
-    @app.route('/letter/<int:id>', methods=['DELETE'])
+    @app.route('/letters/<int:id>', methods=['DELETE'])
     def delete_letter(id):
         username = request.headers.get('X-Remote-User')
         writerId = getOrCreateWritterId(username, app, conn)
@@ -106,7 +114,7 @@ def letter_endpoints(app, r, conn):
         except psycopg2.Error as e:
             return jsonify({'error': f'Failed to modify letter: {e}'}), 500
             
-    @app.route('/letter/<int:id>/reply', methods=['POST'])
+    @app.route('/letters/<int:id>/reply', methods=['POST'])
     def reply_to_letter(id):
         cursor = conn.cursor()
         

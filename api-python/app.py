@@ -6,8 +6,8 @@ import redis
 if __name__ == '__main__':
     try:
         import endpoints.circles as cir
-        import endpoints.writer as wr
-        import endpoints.letter as le
+        import endpoints.writers as wr
+        import endpoints.letters as le
     except ImportError as e:
         raise Exception(__name__) from e
     

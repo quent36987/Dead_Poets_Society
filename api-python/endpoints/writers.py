@@ -3,10 +3,9 @@ from datetime import datetime
 import psycopg2
 from .utilsEndpoints import getOrCreateWritterId
 
-
 def writer_endpoints(app, r, conn):
     
-    @app.route('/writer', methods=['GET'])
+    @app.route('/writers', methods=['GET'])
     def get_writer():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM writer;')
@@ -14,7 +13,7 @@ def writer_endpoints(app, r, conn):
         cursor.close()
         return jsonify(circles)
 
-    @app.route('/writer', methods=['POST'])
+    @app.route('/writers', methods=['POST'])
     def post_writer():
         cursor = conn.cursor()
         try:
@@ -39,7 +38,7 @@ def writer_endpoints(app, r, conn):
             cursor.close()
             return jsonify({'error': f'Failed to post new writer: {e}'}), 500
     
-    @app.route('/writer', methods=['PATCH'])
+    @app.route('/writers', methods=['PATCH'])
     def put_writer():
         cursor = conn.cursor()
         username = request.headers.get('X-Remote-User')
