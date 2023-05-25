@@ -4,37 +4,20 @@ import psycopg2
 from .utilsEndpoints import getOrCreateWritterId
 
 def letter_endpoints(app, r, conn):
-        
-    @app.route('/letters', methods=['GET'])
-    def get_letter(id):
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM letter;')
-        letters = cursor.fetchall()
-        cursor.close()
-        return jsonify(letters)
-
-    @app.route('/letters/<int:id>', methods=['GET'])
-    def get_letter(id):
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM letter WHERE \"circleId\" = %s;', (id,))
-        letters = cursor.fetchall()
-        cursor.close()
-        return jsonify(letters)
-
 
     @app.route('/letters', methods=['POST'])
     def post_letter():
         cursor = conn.cursor()
         
-        username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username, app, conn)
-
-        circleId = request.json['circleid']
-        postAt = updatedAt = datetime.now()
-        content = request.json['content']
-        subject = request.json['subject']
-
         try:
+            username = request.headers.get('X-Remote-User')
+            writerId = getOrCreateWritterId(username, app, conn)
+
+            circleId = request.json['circleid']
+            postAt = updatedAt = datetime.now()
+            content = request.json['content']
+            subject = request.json['subject']
+
             cursor.execute('SELECT * FROM \"writerCircle\" WHERE \"writerId\" = %s AND \"circleId\" = %s;', (writerId, circleId,))
             res = cursor.fetchone()
 
@@ -60,11 +43,11 @@ def letter_endpoints(app, r, conn):
     
     @app.route('/letters/<int:id>', methods=['PATCH'])
     def put_letter(id):
-        username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username, app, conn)
-
         cursor = conn.cursor()
         try:
+            username = request.headers.get('X-Remote-User')
+            writerId = getOrCreateWritterId(username, app, conn)
+
             cursor.execute('SELECT * FROM letter WHERE id = %s;', (id,))
             letter = cursor.fetchone()
             if letter[2] != writerId:
@@ -92,11 +75,11 @@ def letter_endpoints(app, r, conn):
     
     @app.route('/letters/<int:id>', methods=['DELETE'])
     def delete_letter(id):
-        username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username, app, conn)
-
         cursor = conn.cursor()
+
         try:
+            username = request.headers.get('X-Remote-User')
+            writerId = getOrCreateWritterId(username, app, conn)
             cursor.execute('SELECT * FROM letter WHERE id = %s;', (id,))
             letter = cursor.fetchone()
             if letter[2] != writerId:
@@ -104,7 +87,6 @@ def letter_endpoints(app, r, conn):
                 return jsonify({'message': f'you cannot edit a letter you did not post'}), 400
             cursor.execute('DELETE FROM letter WHERE id = %s;', (id,))
 
-            # message with id 0 as "This message was deleted"? 
             cursor.execute('UPDATE letter SET \"replyId\" = 0 WHERE \"replyId\" = %s;', (id,))
             conn.commit()
             cursor.close()
@@ -118,15 +100,16 @@ def letter_endpoints(app, r, conn):
     def reply_to_letter(id):
         cursor = conn.cursor()
         
-        username = request.headers.get('X-Remote-User')
-        writerId = getOrCreateWritterId(username, app, conn)
-
-        circleId = request.json['circleid']
-        postAt = updatedAt = datetime.now()
-        content = request.json['content']
-        subject = request.json['subject']
 
         try:
+            username = request.headers.get('X-Remote-User')
+            writerId = getOrCreateWritterId(username, app, conn)
+
+            circleId = request.json['circleid']
+            postAt = updatedAt = datetime.now()
+            content = request.json['content']
+            subject = request.json['subject']
+
             cursor.execute('SELECT * FROM \"writerCircle\" WHERE \"writerId\" = %s AND \"circleId\" = %s;', (writerId, circleId,))
             res = cursor.fetchone()
 

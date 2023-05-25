@@ -4,14 +4,6 @@ import psycopg2
 from .utilsEndpoints import getOrCreateWritterId
 
 def writer_endpoints(app, r, conn):
-    
-    @app.route('/writers', methods=['GET'])
-    def get_writer():
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM writer;')
-        circles = cursor.fetchall()
-        cursor.close()
-        return jsonify(circles)
 
     @app.route('/writers', methods=['POST'])
     def post_writer():
@@ -41,9 +33,10 @@ def writer_endpoints(app, r, conn):
     @app.route('/writers', methods=['PATCH'])
     def put_writer():
         cursor = conn.cursor()
-        username = request.headers.get('X-Remote-User')
-        id = getOrCreateWritterId(username, app, conn)
         try:
+            username = request.headers.get('X-Remote-User')
+            id = getOrCreateWritterId(username, app, conn)
+
             cursor.execute('SELECT * FROM writer WHERE id = %s;', (id,))
             writer = cursor.fetchone()
             
@@ -59,24 +52,3 @@ def writer_endpoints(app, r, conn):
         except psycopg2.Error as e:
             cursor.close()
             return jsonify({'error': f'Failed to post new writer: {e}'}), 500
-    
-    # @app.route('/writer/<int:id>', methods=['DELETE'])
-    # def delete_writer(id):
-    #     cursor = conn.cursor()
-    #     # username = request.headers.get('X-Remote-User')
-    #     try:
-    #         cursor.execute('SELECT * FROM writer WHERE id = %s;', (id,))
-    #         writer = cursor.fetchone()
-    #         if not writer:
-    #             cursor.close()
-    #             return jsonify({'error': f'Invalid User with id: {id}'}), 200
-
-    #         cursor.execute('DELETE FROM writer WHERE id = %s;', (id,))
-    #         cursor.execute('DELETE FROM writerCircle WHERE writerId = %s;', (id,))
-
-    #         cursor.close()
-    #         return jsonify({'success': f'Deleted writer {writer[0]}'}), 200
-
-    #     except psycopg2.Error as e:
-    #         cursor.close()
-    #         return jsonify({'error': f'Failed to delete writer: {e}'}), 500

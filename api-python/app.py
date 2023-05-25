@@ -42,27 +42,5 @@ if __name__ == '__main__':
     cir.circles_endpoints(app, r, conn)
     wr.writer_endpoints(app, r, conn)
     le.letter_endpoints(app, r, conn)
-
-    # Route pour obtenir la liste des tables existantes
-    @app.route('/tables', methods=['GET'])
-    def get_tables():
-        cursor = conn.cursor()
-
-        try:
-            # Exécution de la requête SQL pour obtenir la liste des tables
-            cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'")
-
-            # Récupération des noms de tables dans un tuple
-            tables = cursor.fetchall()
-
-            # Fermeture du curseur
-            cursor.close()
-
-            # Conversion du tuple en une liste de noms de tables
-            table_names = [table[0] for table in tables]
-
-            return jsonify({'tables': table_names}), 200
-        except psycopg2.Error as e:
-            cursor.close()
-            return jsonify({'error': f'Failed to get tables: {e}'}), 500
+    
     app.run(debug=True, host='0.0.0.0', port=5001)

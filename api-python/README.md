@@ -12,22 +12,40 @@ All the endpoints must be preceded by the api express url (https://dps.epita.loc
 Method     |url                        | Json body                         | What it does
 
 ### Circles
-- POST:    [/circles](https://dps.epita.local/public-api/circles);                   body: name;                         create new circle
-- POST:    [/circles/int:id/join](https://dps.epita.local/public-api/circles/int:id/join);                                         join circle
-- PATCH    [/circles/int:id/quit](https://dps.epita.local/public-api/circles/int:id/quit);                                         quit circle
+- POST:    [/circles](https://dps.epita.local/public-api/circles); Create new circle
+```json
+body: {name:}
+```
+- POST:    [/circles/int:id/join](https://dps.epita.local/public-api/circles/int:id/join); Join circle
+- PATCH    [/circles/int:id/quit](https://dps.epita.local/public-api/circles/int:id/quit); Quit circle
 - /!\ DELETE endpoint not open yet
 
 ### Writers
- - POST:    [/writers](https://dps.epita.local/public-api/writers);                    body: title, name, pseudo;          create a new writer
- - PATCH:   [/writers](https://dps.epita.local/public-api/writers);                    body: title?, pseudo?;              update the current writer
+ - POST:    [/writers](https://dps.epita.local/public-api/writers); Create a new writer
+ ```json                 
+ body: {title:, name:, pseudo: }
+ ```
+ - PATCH:   [/writers](https://dps.epita.local/public-api/writers); Update the current writer
+  ```json                 
+ body: {title:, pseudo: }
+ ```
  - /!\ DELETE endpoint not open yet
 
 
 ### Letters
- - POST:    [/letters](https://dps.epita.local/public-api/letters);                    body: circleid, subject, content;   post new letter
- - POST:    [/letters/int:id/reply](https://dps.epita.local/public-api/letters/int:id/reply);     body: circleid, subject, content;   reply to letter
- - PATCH:   [/letters/int:id](https://dps.epita.local/public-api/letters/int:id);           body: subject, content;             update letter
- - DELETE:  [/letters/int:id](https://dps.epita.local/public-api/letters/int:id);                                               delete letter with id id
+ - POST:    [/letters](https://dps.epita.local/public-api/letters); Post new letter              
+ ```json
+ body: {circleid:, subject:, content:}
+ ```
+ - POST:    [/letters/int:id/reply](https://dps.epita.local/public-api/letters/int:id/reply); Reply to letter
+ ```json
+ body: {circleid:, subject:, content:}
+ ``` 
+ - PATCH:   [/letters/int:id](https://dps.epita.local/public-api/letters/int:id); Update letter
+ ```json
+ body: {subject:, content:}             
+ ```
+ - DELETE:  [/letters/int:id](https://dps.epita.local/public-api/letters/int:id);                                               Delete letter with id id
 
  ### Tests
 
