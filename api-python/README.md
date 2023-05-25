@@ -2,6 +2,8 @@
 
 The API-python is a private api, it's all the POST, PATCH and DELETE of the database. The user need to be authenticated to use it.
 
+You can use the username: "user" with the password: "user" to connect.
+
 url: https://dps.epita.local/private-api
 
 ## Endpoints
