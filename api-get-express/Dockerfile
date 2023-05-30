@@ -16,4 +16,4 @@ RUN chmod +x entrypoint.sh
 
 EXPOSE 3000
 
-ENTRYPOINT ["./entrypoint.sh"]
+CMD npx prisma db push && npm run seed && npm run dev
