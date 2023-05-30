@@ -35,7 +35,7 @@ def writer_endpoints(app, r, conn):
         cursor = conn.cursor()
         try:
             username = request.headers.get('X-Remote-User')
-            id = getOrCreateWritterId(username, app, conn)
+            id = getOrCreateWritterId(username, app, r, conn)
 
             cursor.execute('SELECT * FROM writer WHERE id = %s;', (id,))
             writer = cursor.fetchone()

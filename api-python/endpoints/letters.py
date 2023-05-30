@@ -11,14 +11,15 @@ def letter_endpoints(app, r, conn):
         
         try:
             username = request.headers.get('X-Remote-User')
-            writerId = getOrCreateWritterId(username, app, conn)
+            writerId = getOrCreateWritterId(username, app, r, conn)
 
             circleId = request.json['circleid']
             postAt = updatedAt = datetime.now()
             content = request.json['content']
             subject = request.json['subject']
 
-            cursor.execute('SELECT * FROM \"writerCircle\" WHERE \"writerId\" = %s AND \"circleId\" = %s;', (writerId, circleId,))
+            # A = circleId, B = userId
+            cursor.execute('SELECT * FROM \"_circleTowriter\" WHERE \"B\" = %s AND \"A\" = %s;', (writerId, circleId,))
             res = cursor.fetchone()
 
             if not res:
@@ -46,7 +47,7 @@ def letter_endpoints(app, r, conn):
         cursor = conn.cursor()
         try:
             username = request.headers.get('X-Remote-User')
-            writerId = getOrCreateWritterId(username, app, conn)
+            writerId = getOrCreateWritterId(username, app, r, r, conn)
 
             cursor.execute('SELECT * FROM letter WHERE id = %s;', (id,))
             letter = cursor.fetchone()
@@ -79,7 +80,7 @@ def letter_endpoints(app, r, conn):
 
         try:
             username = request.headers.get('X-Remote-User')
-            writerId = getOrCreateWritterId(username, app, conn)
+            writerId = getOrCreateWritterId(username, app, r, conn)
             cursor.execute('SELECT * FROM letter WHERE id = %s;', (id,))
             letter = cursor.fetchone()
             if letter[2] != writerId:
@@ -103,14 +104,15 @@ def letter_endpoints(app, r, conn):
 
         try:
             username = request.headers.get('X-Remote-User')
-            writerId = getOrCreateWritterId(username, app, conn)
+            writerId = getOrCreateWritterId(username, app, r, conn)
 
             circleId = request.json['circleid']
             postAt = updatedAt = datetime.now()
             content = request.json['content']
             subject = request.json['subject']
 
-            cursor.execute('SELECT * FROM \"writerCircle\" WHERE \"writerId\" = %s AND \"circleId\" = %s;', (writerId, circleId,))
+            # A = circleId, B = userId
+            cursor.execute('SELECT * FROM \"_circleTowriter\" WHERE \"B\" = %s AND \"A\" = %s;', (writerId, circleId,))
             res = cursor.fetchone()
 
             if not res:

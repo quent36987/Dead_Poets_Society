@@ -32,8 +32,8 @@ def circles_endpoints(app, r, conn):
         cursor = conn.cursor()
         try:
             username = request.headers.get('X-Remote-User')
-            userId = getOrCreateWritterId(username, app, conn)
-            cursor.execute('INSERT INTO \"writerCircle\" VALUES (%s, %s);', (id, userId,))
+            userId = getOrCreateWritterId(username, app, r, conn)
+            cursor.execute('INSERT INTO \"_circleTowriter\" VALUES (%s, %s);', (id, userId,))
             conn.commit()
             cursor.close()
             return jsonify({'sucess': f'Sucess in joining circle with id {id}'})
@@ -49,8 +49,9 @@ def circles_endpoints(app, r, conn):
         cursor = conn.cursor()
         try:
             username = request.headers.get('X-Remote-User')
-            userId = getOrCreateWritterId(username, app, conn)
-            cursor.execute('DELETE FROM \"writerCircle\" WHERE \"circleId\" = %s AND \"writerId\" = %s;', (id, userId,))
+            userId = getOrCreateWritterId(username, app, r, conn)
+            # A = circleId, B = userId
+            cursor.execute('DELETE FROM \"_circleTowriter\" WHERE \"A\" = %s AND \"B\" = %s;', (id, userId,))
             conn.commit()
             cursor.close()
 
