@@ -3,6 +3,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const main = async () => {
+    // if some data already exists, we don't want to seed again
+    const writerCount = await prisma.writer.count();
+    if (writerCount > 0) {
+        console.log('Data already seeded');
+        return;
+    }
+
     const writer1 = await prisma.writer.create({
         data: {
             name: 'John Doe',
