@@ -18,7 +18,7 @@ Method     |url                        | Json body                         | Wha
 ```json
 body: {name:}
 ```
-- POST:    [/circles/int:id/join](https://dps.epita.local/public-api/circles/int:id/join); Join circle
+- PUT:    [/circles/int:id/join](https://dps.epita.local/public-api/circles/int:id/join); Join circle
 - PUT:    [/circles/int:id/quit](https://dps.epita.local/public-api/circles/int:id/quit); Quit circle
 - /!\ DELETE endpoint not open yet
 
@@ -39,7 +39,7 @@ body: {name:}
  ```json
  body: {circleid:, subject:, content:}
  ```
- - POST:    [/letters/int:id/reply](https://dps.epita.local/public-api/letters/int:id/reply); Reply to letter
+ - PUT:    [/letters/int:id/reply](https://dps.epita.local/public-api/letters/int:id/reply); Reply to letter
  ```json
  body: {circleid:, subject:, content:}
  ``` 
@@ -72,7 +72,7 @@ fetch('https://dps.epita.local/private-api/circles', {
 
 // Join a new circles
 fetch('https://dps.epita.local/private-api/circles/1/join', {
-      method: 'POST',
+      method: 'PUT',
 }).then(res => res.json()).then(console.log)
 
 // POST:    /letter; post a new letter
@@ -91,7 +91,7 @@ fetch('https://dps.epita.local/private-api/letters', {
 
 // POST:    /letter/int:id/reply; reply to the letter with id 1
 fetch('https://dps.epita.local/private-api/letters/1/reply', {
-      method: 'POST',
+      method: 'PUT',
     body: JSON.stringify({
         circleid: '1',
         content: 'les poissons verts sont meileurs et bio parce que verts.',
