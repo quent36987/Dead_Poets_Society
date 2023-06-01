@@ -19,7 +19,7 @@ Method     |url                        | Json body                         | Wha
 body: {name:}
 ```
 - POST:    [/circles/int:id/join](https://dps.epita.local/public-api/circles/int:id/join); Join circle
-- PATCH    [/circles/int:id/quit](https://dps.epita.local/public-api/circles/int:id/quit); Quit circle
+- PUT:    [/circles/int:id/quit](https://dps.epita.local/public-api/circles/int:id/quit); Quit circle
 - /!\ DELETE endpoint not open yet
 
 ### Writers
@@ -47,7 +47,7 @@ body: {name:}
  ```json
  body: {subject:, content:}             
  ```
- - DELETE:  [/letters/int:id](https://dps.epita.local/public-api/letters/int:id);                                               Delete letter with id id
+ - DELETE:  [/letters/int:id](https://dps.epita.local/public-api/letters/int:id); Delete letter with id id
 
  ### Tests
 
@@ -70,8 +70,13 @@ fetch('https://dps.epita.local/private-api/circles', {
     }
 }).then(res => res.json()).then(console.log)
 
+// Join a new circles
+fetch('https://dps.epita.local/private-api/circles/1/join', {
+      method: 'POST',
+}).then(res => res.json()).then(console.log)
+
 // POST:    /letter; post a new letter
-fetch('https://dps.epita.local/private-api/letter', {
+fetch('https://dps.epita.local/private-api/letters', {
       method: 'POST',
     body: JSON.stringify({
         circleid: '1',
@@ -85,7 +90,7 @@ fetch('https://dps.epita.local/private-api/letter', {
 }).then(res => res.json()).then(console.log)
 
 // POST:    /letter/int:id/reply; reply to the letter with id 1
-fetch('https://dps.epita.local/private-api/letter/1/reply/', {
+fetch('https://dps.epita.local/private-api/letters/1/reply', {
       method: 'POST',
     body: JSON.stringify({
         circleid: '1',
