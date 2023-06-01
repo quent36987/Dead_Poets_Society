@@ -23,6 +23,10 @@ add "127.0.0.1 dps.epita.local" to your /etc/hosts
 
 enjoy and try !
 
+## ARCHITECTURE
+
+![architecture](./misc/flux.png)
+
 ## SERVICES
 
 ### Keycloak
