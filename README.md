@@ -42,7 +42,9 @@ We use it to store all the data of the social network.
 
 It's run on port 5432 in the docker-compose.yml
 
-The default user is postgres and the password is postgres
+The default user is postgres and the password is postgres.
+
+Explanation of the database: ([database](./api-get-express/README_SQL.md))
 
 ### Redis
 
